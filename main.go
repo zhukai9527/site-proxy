@@ -102,7 +102,7 @@ func main() {
 			return
 		}
 
-		err = tmpl.Execute(w, config)
+		err = tmpl.ExecuteTemplate(w, "index.html", config)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
