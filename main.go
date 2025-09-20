@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"html/template"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -44,7 +44,7 @@ func loadConfig() Config {
 
 // 从配置文件加载配置
 func loadConfigFromFile(filePath string) (Config, error) {
-	data, err := ioutil.ReadFile(filePath)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		return Config{}, err
 	}
