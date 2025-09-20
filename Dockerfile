@@ -1,15 +1,12 @@
-FROM golang:1.19-alpine AS builder
+FROM golang:1.20-alpine AS builder
 
 WORKDIR /app
 
-# 复制go.mod和go.sum文件
-COPY go.mod go.sum ./
-
-# 下载依赖
-RUN go mod download
-
 # 复制源代码
 COPY . .
+
+# 修复依赖问题
+RUN go mod tidy
 
 # 构建应用
 RUN CGO_ENABLED=0 GOOS=linux go build -o proxy-app .
