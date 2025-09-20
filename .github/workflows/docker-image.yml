@@ -3,9 +3,7 @@ name: Create and publish a Docker image
 on:
   push:
     branches: ['main']
-  # 移除了 create 触发器或根据需要添加具体条件
-  # 例如，如果想在创建标签时触发： 
-  # tags: ['v*']
+  workflow_dispatch:  # 允许手动触发
 
 env:
   REGISTRY: ghcr.io
@@ -13,13 +11,63 @@ env:
   DOCKERHUB_IMAGE_NAME: zack2025/site-proxy
 
 jobs:
+  version-management:
+    if: github.repository == 'zhukai9527/site-proxy'
+    runs-on: ubuntu-latest
+    outputs:
+      next_version: ${{ steps.get-next-version.outputs.next_version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # 获取完整历史记录用于标签检测
+
+      - name: Get next version number
+        id: get-next-version
+        run: |
+          # 获取所有标签并排序
+          git fetch --tags
+          
+          # 获取最新的版本标签
+          LATEST_TAG=$(git tag -l "v*" --sort=-v:refname | head -n 1 || echo "")
+          
+          if [ -z "$LATEST_TAG" ]; then
+            # 如果没有标签，使用初始版本 v1.0.0
+            NEXT_VERSION="v1.0.0"
+            echo "No existing tags found. Using initial version: $NEXT_VERSION"
+          else
+            # 解析当前版本号
+            echo "Latest tag found: $LATEST_TAG"
+            
+            # 移除 'v' 前缀
+            VERSION=${LATEST_TAG#v}
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+            
+            # 递增补丁版本号
+            NEW_PATCH=$((PATCH + 1))
+            NEXT_VERSION="v${MAJOR}.${MINOR}.${NEW_PATCH}"
+            echo "Incremented version: $NEXT_VERSION"
+          fi
+          
+          echo "next_version=$NEXT_VERSION" >> $GITHUB_OUTPUT
+          echo "Next version will be: $NEXT_VERSION"
+
+      - name: Create Git tag for new version
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git tag ${{ steps.get-next-version.outputs.next_version }}
+          git push origin ${{ steps.get-next-version.outputs.next_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build-and-push-image:
     if: github.repository == 'zhukai9527/site-proxy'
+    needs: version-management
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      # 添加 Docker 仓库权限
       attestations: write
       id-token: write
 
@@ -51,10 +99,8 @@ jobs:
             ${{ env.DOCKERHUB_IMAGE_NAME }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
+            type=raw,value=${{ needs.version-management.outputs.next_version }}
+            type=raw,value=latest
             type=sha
 
       - name: Build and push Docker image
@@ -63,15 +109,22 @@ jobs:
           context: .
           push: true
           file: ./Dockerfile
-          tags: ${{ steps.meta.outputs.tags }}  # 使用动态标签
+          tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      - name: Output build information
+        run: |
+          echo "Build completed successfully!"
+          echo "Version: ${{ needs.version-management.outputs.next_version }}"
+          echo "Docker Hub image: ${{ env.DOCKERHUB_IMAGE_NAME }}:${{ needs.version-management.outputs.next_version }}"
+          echo "GHCR image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ needs.version-management.outputs.next_version }}"
+
       - name: Clean up old package versions
         uses: actions/delete-package-versions@v4
         with:
-          package-name: ${{ github.repository }}  # 使用动态包名
+          package-name: ${{ github.repository }}
           package-type: container
           min-versions-to-keep: 10
           delete-only-untagged-versions: true
