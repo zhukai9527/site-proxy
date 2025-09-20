@@ -12,6 +12,7 @@ FROM alpine:latest
 
 WORKDIR /app
 
+COPY --from=builder /app/config.json ./config.json
 COPY --from=builder /app/proxy-app .
 COPY --from=builder /app/static ./static
 COPY --from=builder /app/templates ./templates
