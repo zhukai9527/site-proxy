@@ -1,0 +1,15 @@
+# 代理网站配置文件
+
+# 服务器监听端口
+port: 8080
+
+# 代理配置列表
+proxy_configs:
+  - name: Google
+    url: https://www.google.com
+  - name: GitHub
+    url: https://github.com
+  - name: Baidu
+    url: https://www.baidu.com
+  - name: Bing
+    url: https://www.bing.com

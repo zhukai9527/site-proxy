@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>代理网站</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="glass-container">
+        <header>
+            <nav>
+                <div class="logo">代理网站</div>
+                <ul class="menu">
+                    <li><a href="/">首页</a></li>
+                    {{range .ProxyConfigs}}
+                    <li><a href="/proxy/{{.Name | ToLower}}/" target="_self">{{.Name}}</a></li>
+                    {{end}}
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            <section class="hero">
+                <h1>欢迎使用代理网站</h1>
+                <p>通过我们的服务，您可以轻松访问各种第三方网站</p>
+            </section>
+
+            <section class="cards">
+                <div class="card">
+                    <h2>项目背景</h2>
+                    <p>本项目旨在提供一个简单、高效的代理服务，帮助用户访问各种第三方网站。通过环境变量配置，可以轻松添加多个代理地址。</p>
+                </div>
+                <div class="card">
+                    <h2>核心功能</h2>
+                    <p>
+                        <ul>
+                            <li>支持多个代理地址配置</li>
+                            <li>简洁美观的用户界面</li>
+                            <li>毛玻璃效果和动画设计</li>
+                            <li>Docker容器化部署</li>
+                        </ul>
+                    </p>
+                </div>
+                <div class="card">
+                    <h2>推广宣传</h2>
+                    <p>简单、高效、安全 - 您访问第三方网站的最佳选择！我们的代理服务为您提供无缝的浏览体验，让您轻松访问所需的各种资源。</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2023 代理网站. 保留所有权利.</p>
+        </footer>
+    </div>
+
+    <div class="background">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>

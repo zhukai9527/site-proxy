@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  proxy-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+      - PROXY_CONFIGS=Google:https://www.google.com,GitHub:https://github.com,Baidu:https://www.baidu.com
+    restart: unless-stopped
