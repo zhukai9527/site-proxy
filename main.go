@@ -10,6 +10,7 @@ import (
     "os"
     "strings"
     "path/filepath"
+    "regexp"
 )
 
 // ProxyConfig 代表一个代理配置
@@ -60,20 +61,60 @@ func loadConfig() Config {
 }
 
 // 创建反向代理处理器
-func createReverseProxy(targetURL string) (*httputil.ReverseProxy, error) {
-    url, err := url.Parse(targetURL)
+func createReverseProxy(targetURL string, proxyPath string) (*httputil.ReverseProxy, error) {
+    target, err := url.Parse(targetURL)
     if err != nil {
         return nil, err
     }
 
-    proxy := httputil.NewSingleHostReverseProxy(url)
+    proxy := httputil.NewSingleHostReverseProxy(target)
     
     // 修改请求头
     originalDirector := proxy.Director
     proxy.Director = func(req *http.Request) {
         originalDirector(req)
-        req.Host = url.Host
+        req.Host = target.Host
         req.Header.Set("X-Forwarded-Host", req.Header.Get("Host"))
+        req.Header.Set("X-Forwarded-Proto", "http")
+        
+        // 记录原始URL以便在重写重定向时使用
+        req.Header.Set("X-Original-Path", proxyPath)
+    }
+
+    // 修改响应，处理重定向
+    proxy.ModifyResponse = func(resp *http.Response) error {
+        // 检查是否是重定向响应
+        if resp.StatusCode >= 300 && resp.StatusCode < 400 {
+            location, err := resp.Location()
+            if err == nil && location != nil {
+                // 如果重定向指向目标域名，则重写为重定向到代理路径
+                if location.Host == target.Host {
+                    // 保存原始路径
+                    originalPath := location.Path
+                    if location.RawQuery != "" {
+                        originalPath += "?" + location.RawQuery
+                    }
+                    
+                    // 构建新的代理URL
+                    newLocation := &url.URL{
+                        Path:     proxyPath + strings.TrimPrefix(originalPath, "/"),
+                        RawQuery: location.RawQuery,
+                    }
+                    
+                    // 设置新的Location头
+                    resp.Header.Set("Location", newLocation.String())
+                    log.Printf("重写重定向: %s -> %s", location.String(), newLocation.String())
+                }
+            }
+        }
+        
+        // 修复可能的内容安全策略头，防止浏览器阻塞资源加载
+        if csp := resp.Header.Get("Content-Security-Policy"); csp != "" {
+            // 放宽CSP策略以允许通过代理加载资源
+            resp.Header.Set("Content-Security-Policy", "default-src 'self' 'unsafe-inline' 'unsafe-eval' *;")
+        }
+        
+        return nil
     }
 
     return proxy, nil
@@ -108,11 +149,16 @@ func main() {
         
         var tmpl *template.Template
         var err error
+        var loadedPath string
         
         for _, path := range templatePaths {
             tmpl, err = template.New(filepath.Base(path)).Funcs(funcMap).ParseFiles(path)
             if err == nil {
+                loadedPath = path
+                log.Printf("模板成功加载从路径: %s", path)
                 break
+            } else {
+                log.Printf("模板加载失败从路径 %s: %v", path, err)
             }
         }
         
@@ -151,21 +197,29 @@ func main() {
     for _, proxyConfig := range config.ProxyConfigs {
         // 使用闭包捕获当前的proxyConfig
         func(pc ProxyConfig) {
-            proxyHandler, err := createReverseProxy(pc.URL)
+            proxyPath := "/proxy/" + strings.ToLower(pc.Name) + "/"
+            proxyHandler, err := createReverseProxy(pc.URL, proxyPath)
             if err != nil {
                 log.Printf("创建代理 %s 失败: %v", pc.Name, err)
                 return
             }
 
             // 为每个代理创建路由
-            proxyPath := "/proxy/" + strings.ToLower(pc.Name) + "/"
             http.HandleFunc(proxyPath, func(w http.ResponseWriter, r *http.Request) {
                 // 修改请求路径，移除代理前缀
+                originalPath := r.URL.Path
                 r.URL.Path = strings.TrimPrefix(r.URL.Path, proxyPath)
                 if r.URL.Path == "" {
                     r.URL.Path = "/"
                 }
+                
+                log.Printf("代理请求: %s -> %s%s", originalPath, pc.URL, r.URL.Path)
                 proxyHandler.ServeHTTP(w, r)
+            })
+            
+            // 处理没有尾部斜杠的情况
+            http.HandleFunc("/proxy/"+strings.ToLower(pc.Name), func(w http.ResponseWriter, r *http.Request) {
+                http.Redirect(w, r, proxyPath, http.StatusMovedPermanently)
             })
         }(proxyConfig)
     }
