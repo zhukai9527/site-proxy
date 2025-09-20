@@ -1,317 +1,342 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-}
-
-body {
-    min-height: 100vh;
-    background: linear-gradient(45deg, #3498db, #8e44ad);
-    overflow-x: hidden;
-}
-
-/* 毛玻璃容器 */
-.glass-container {
-    position: relative;
-    width: 100%;
-    min-height: 100vh;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    z-index: 10;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-/* 导航栏 */
-header {
-    padding: 20px 40px;
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(15px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: white;
-}
-
-.menu {
-    display: flex;
-    list-style: none;
-    flex: 1;
-    justify-content: center;
-}
-
-.menu li {
-    margin-left: 20px;
-}
-
-.menu a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    padding: 8px 15px;
-    border-radius: 5px;
-}
-
-.menu a:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-/* 主要内容 */
-main {
-    flex: 1;
-    padding: 40px;
-}
-
-.hero {
-    text-align: center;
-    margin-bottom: 60px;
-    color: white;
-}
-
-.hero h1 {
-    font-size: 48px;
-    margin-bottom: 20px;
-    animation: fadeIn 1s ease;
-}
-
-.hero p {
-    font-size: 20px;
-    opacity: 0.9;
-    animation: fadeIn 1.5s ease;
-}
-
-/* 卡片部分 */
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-    margin-top: 40px;
-}
-
-.card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-    padding: 30px;
-    color: white;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    animation: slideUp 0.8s ease forwards;
-    opacity: 0;
-    transform: translateY(50px);
-}
-
-.card:nth-child(1) {
-    animation-delay: 0.2s;
-}
-
-.card:nth-child(2) {
-    animation-delay: 0.4s;
-}
-
-.card:nth-child(3) {
-    animation-delay: 0.6s;
-}
-
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-}
-
-.card h2 {
-    margin-bottom: 15px;
-    font-size: 24px;
-}
-
-.card p {
-    line-height: 1.6;
-    opacity: 0.9;
-}
-
-.card ul {
-    margin-left: 20px;
-    line-height: 1.6;
-}
-
-/* 页脚 */
-footer {
-    text-align: center;
-    padding: 20px;
-    color: white;
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-/* 背景动画 */
-.background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-}
-
-.background span {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
-    animation: move 15s linear infinite;
-    bottom: -150px;
-}
-
-.background span:nth-child(1) {
-    left: 10%;
-    animation-delay: 0s;
-    animation-duration: 20s;
-    width: 120px;
-    height: 120px;
-}
-
-.background span:nth-child(2) {
-    left: 20%;
-    animation-delay: 2s;
-    animation-duration: 25s;
-    width: 90px;
-    height: 90px;
-}
-
-.background span:nth-child(3) {
-    left: 35%;
-    animation-delay: 4s;
-    width: 150px;
-    height: 150px;
-}
-
-.background span:nth-child(4) {
-    left: 50%;
-    animation-delay: 6s;
-    width: 60px;
-    height: 60px;
-}
-
-.background span:nth-child(5) {
-    left: 65%;
-    animation-delay: 8s;
-    width: 100px;
-    height: 100px;
-}
-
-.background span:nth-child(6) {
-    left: 75%;
-    animation-delay: 10s;
-    width: 110px;
-    height: 110px;
-}
-
-.background span:nth-child(7) {
-    left: 85%;
-    animation-delay: 12s;
-    width: 70px;
-    height: 70px;
-}
-
-.background span:nth-child(8) {
-    left: 90%;
-    animation-delay: 14s;
-    width: 130px;
-    height: 130px;
-}
-
-.background span:nth-child(9) {
-    left: 5%;
-    animation-delay: 16s;
-    width: 80px;
-    height: 80px;
-}
-
-.background span:nth-child(10) {
-    left: 40%;
-    animation-delay: 18s;
-    width: 140px;
-    height: 140px;
-}
-
-/* 动画 */
-@keyframes move {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0.8;
-    }
-    100% {
-        transform: translateY(-1000px) rotate(720deg);
-        opacity: 0;
-    }
-}
-
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes slideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(50px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-    header {
-        padding: 15px 20px;
-    }
-    
-    nav {
-        flex-direction: column;
-    }
-    
-    .menu {
-        margin-top: 15px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    .menu li {
-        margin: 5px;
-    }
-    
-    .hero h1 {
-        font-size: 36px;
-    }
-    
-    .hero p {
-        font-size: 18px;
-    }
-    
-    main {
-        padding: 20px;
-    }
-    
-    .cards {
-        grid-template-columns: 1fr;
-    }
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+        
+        .glass-container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1;
+        }
+        
+        header {
+            margin-bottom: 40px;
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 25px;
+            border-radius: 50px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            cursor: pointer;
+        }
+        
+        .menu {
+            display: flex;
+            list-style: none;
+            gap: 15px;
+        }
+        
+        .menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .menu li a:hover, .menu li a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .hero {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #a1c4fd, #c2e9fb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        
+        .search-input {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 25px;
+            border: none;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .section {
+            margin-top: 60px;
+            margin-bottom: 60px;
+            scroll-margin-top: 120px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            transition: transform 0.3s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .card {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            background: rgba(0, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #4facfe;
+        }
+        
+        .card p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+        
+        .back-to-top:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+        
+        .background span {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s linear infinite;
+        }
+        
+        .background span:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-duration: 15s;
+        }
+        
+        .background span:nth-child(2) {
+            top: 60%;
+            left: 80%;
+            animation-duration: 18s;
+        }
+        
+        .background span:nth-child(3) {
+            top: 40%;
+            left: 30%;
+            animation-duration: 12s;
+        }
+        
+        .background span:nth-child(4) {
+            top: 70%;
+            left: 40%;
+            animation-duration: 20s;
+        }
+        
+        .background span:nth-child(5) {
+            top: 30%;
+            left: 60%;
+            animation-duration: 16s;
+        }
+        
+        .background span:nth-child(6) {
+            top: 80%;
+            left: 20%;
+            animation-duration: 14s;
+        }
+        
+        .background span:nth-child(7) {
+            top: 10%;
+            left: 70%;
+            animation-duration: 19s;
+        }
+        
+        .background span:nth-child(8) {
+            top: 50%;
+            left: 50%;
+            animation-duration: 17s;
+        }
+        
+        .background span:nth-child(9) {
+            top: 65%;
+            left: 90%;
+            animation-duration: 13s;
+        }
+        
+        .background span:nth-child(10) {
+            top: 15%;
+            left: 25%;
+            animation-duration: 21s;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000%) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                padding: 15px;
+                border-radius: 20px;
+            }
+            
+            .menu {
+                margin-top: 20px;
+                justify-content: center;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .section h2 {
+                font-size: 1.8rem;
+            }
+        }

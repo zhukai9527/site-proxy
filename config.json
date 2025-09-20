@@ -1,0 +1,18 @@
+[
+    {
+      "name": "locallytools",
+      "url": "https://locallytools.com/",
+      "description": "本地工具网站",
+      "tags": ["工具", "本地"],
+      "status": "active",
+      "usage": "1000000"
+    },
+    {
+      "name": "datatool",
+      "url": "https://www.datatool.vip",
+      "description": "数据工具网站",
+      "tags": ["工具", "数据"],
+      "status": "active",
+      "usage": "1000000"
+    }
+  ]
