@@ -10,9 +10,8 @@
     <div class="glass-container">
         <header>
             <nav>
-                <div class="logo">代理网站</div>
+                <div class="logo">首页</div>
                 <ul class="menu">
-                    <li><a href="/">首页</a></li>
                     {{range .ProxyConfigs}}
                     <li><a href="/proxy/{{.Name | ToLower}}/" target="_self">{{.Name}}</a></li>
                     {{end}}

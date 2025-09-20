@@ -48,6 +48,8 @@ nav {
 .menu {
     display: flex;
     list-style: none;
+    flex: 1;
+    justify-content: center;
 }
 
 .menu li {
