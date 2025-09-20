@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    branches: ['master']
+    branches: ['main']
   # 移除了 create 触发器或根据需要添加具体条件
   # 例如，如果想在创建标签时触发： 
   # tags: ['v*']
