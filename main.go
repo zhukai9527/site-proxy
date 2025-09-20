@@ -10,7 +10,6 @@ import (
     "os"
     "strings"
     "path/filepath"
-    "regexp"
 )
 
 // ProxyConfig 代表一个代理配置
