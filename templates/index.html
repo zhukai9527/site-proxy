@@ -64,7 +64,7 @@
                         <span class="tag">{{.}}</span>
                         {{end}}
                     </div>
-                    <div style="text-align: center; margin-top: 20px;">
+                    <div style="text-align: center; margin-top: 20px;cursor: pointer;" onclick="visitProxy('{{.Name | ToLower}}')">
                         <a href="/proxy/{{.Name | ToLower}}" target="_blank" style="display: inline-block; padding: 10px 25px; background: rgba(255, 255, 255, 0.2); color: white; text-decoration: none; border-radius: 50px; transition: all 0.3s ease;">访问代理</a>
                     </div>
                 </div>
@@ -168,6 +168,11 @@
     </div>
 
     <script>
+        // 代理访问函数
+        function visitProxy(proxyName) {
+            // 在新标签页中打开代理链接
+            window.open(`/proxy/${proxyName}`, '_blank');
+        }
         // 搜索功能
         function setupSearch() {
             const searchInput = document.getElementById('searchInput');
